@@ -12,6 +12,7 @@ import { ProjectorMode } from './components/multiplayer/ProjectorMode';
 import { GroqCoachDrawer } from './components/ai/GroqCoachDrawer';
 import { GuiGameCatalog } from './components/guiGames/GuiGameCatalog';
 import { BadgeShowcaseModal } from './components/achievements/BadgeShowcaseModal';
+import { Footer } from './components/common/Footer';
 import { GameDefinition } from './types/game';
 import { ClassroomSession } from './types/multiplayer';
 
@@ -60,6 +61,9 @@ export function App() {
 
           {currentTab === 'ai' && <GroqCoachDrawer initialContext={aiCoachContext} />}
         </main>
+
+        {/* Clear and Beautifully Designed Footer */}
+        <Footer />
 
         {/* Game Play Modal */}
         {activeGame && (
