@@ -9,6 +9,10 @@ import { NumberLineGame } from '../interactive/NumberLineGame';
 import { BalanceScaleGame } from '../interactive/BalanceScaleGame';
 import { FractionVisualizer } from '../interactive/FractionVisualizer';
 import { GeometryVisualizer } from '../interactive/GeometryVisualizer';
+import { ItemCollectionVisualizer } from '../interactive/ItemCollectionVisualizer';
+import { RainbowBondVisualizer } from '../interactive/RainbowBondVisualizer';
+import { BaseTenBlocksVisualizer } from '../interactive/BaseTenBlocksVisualizer';
+import { MoneyVisualizer } from '../interactive/MoneyVisualizer';
 import { ThinkingEngineDrawer } from './ThinkingEngineDrawer';
 import { EarnedBadgeRecord } from '../../types/achievement';
 import { BadgeUnlockModal } from '../achievements/BadgeUnlockModal';
@@ -187,6 +191,34 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
     setIsConfiguring(true);
     setIsCompleted(false);
   };
+
+  // Keyboard navigation: 1-4 to pick options, Enter to Check Answer or Next Round
+  useEffect(() => {
+    if (isConfiguring || isCompleted || !currentQuestion) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!isAnswerSubmitted) {
+          if (selectedAnswer !== null) {
+            handleSubmitAnswer();
+          }
+        } else {
+          handleNextRound();
+        }
+      } else if (['1', '2', '3', '4'].includes(e.key) && !isAnswerSubmitted) {
+        const idx = parseInt(e.key, 10) - 1;
+        if (currentQuestion.options && currentQuestion.options[idx] !== undefined) {
+          handleSelectOption(currentQuestion.options[idx]);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isConfiguring, isCompleted, isAnswerSubmitted, selectedAnswer, currentQuestion]);
 
   const currentDiff = getDifficultyForRound(currentRound);
 
@@ -396,9 +428,58 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                 />
               </div>
 
+              {/* Challenge Prompt */}
+              <div
+                style={{
+                  padding: '1.25rem 1.5rem',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid var(--border-subtle)',
+                  marginBottom: '1.25rem',
+                }}
+              >
+                <h3 style={{ fontSize: '1.3rem', color: 'white', fontWeight: 800, textAlign: 'center' }}>
+                  {currentQuestion.prompt}
+                </h3>
+              </div>
+
               {/* Interactive Mathematical Visualizers */}
               {currentQuestion.visualData && (
                 <div style={{ marginBottom: '1.25rem' }}>
+                  {currentQuestion.visualData.type === 'item_collection' && (
+                    <ItemCollectionVisualizer
+                      count={currentQuestion.visualData.count}
+                      item={currentQuestion.visualData.item}
+                      onSelectAnswer={(val: number) => {
+                        setSelectedAnswer(val);
+                      }}
+                      selectedAnswer={selectedAnswer}
+                      isAnswerSubmitted={isAnswerSubmitted}
+                      correctAnswer={Number(currentQuestion.correctAnswer)}
+                    />
+                  )}
+
+                  {currentQuestion.visualData.type === 'rainbow_bond' && (
+                    <RainbowBondVisualizer
+                      given={currentQuestion.visualData.given}
+                      target={currentQuestion.visualData.target}
+                    />
+                  )}
+
+                  {currentQuestion.visualData.type === 'base_10_blocks' && (
+                    <BaseTenBlocksVisualizer
+                      tens={currentQuestion.visualData.tens}
+                      ones={currentQuestion.visualData.ones}
+                    />
+                  )}
+
+                  {currentQuestion.visualData.type === 'money' && (
+                    <MoneyVisualizer
+                      price={currentQuestion.visualData.price}
+                      paid={currentQuestion.visualData.paid}
+                    />
+                  )}
+
                   {currentQuestion.visualData.type === 'number_line' && (
                     <NumberLineGame
                       start={currentQuestion.visualData.start}
@@ -423,28 +504,15 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                     />
                   )}
 
-                  {currentQuestion.visualData.type === 'rectangle' && (
+                  {(currentQuestion.visualData.type === 'rectangle' ||
+                    currentQuestion.visualData.type === 'right_triangle' ||
+                    currentQuestion.visualData.type === 'angle') && (
                     <GeometryVisualizer
                       data={currentQuestion.visualData}
                     />
                   )}
                 </div>
               )}
-
-              {/* Challenge Prompt */}
-              <div
-                style={{
-                  padding: '1.25rem 1.5rem',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid var(--border-subtle)',
-                  marginBottom: '1.25rem',
-                }}
-              >
-                <h3 style={{ fontSize: '1.3rem', color: 'white', fontWeight: 800, textAlign: 'center' }}>
-                  {currentQuestion.prompt}
-                </h3>
-              </div>
 
               {/* Multiple Choice Options Grid */}
               <div className="options-grid">
@@ -465,13 +533,74 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                       key={i}
                       className={`option-tile ${statusClass}`}
                       onClick={() => handleSelectOption(opt)}
+                      onDoubleClick={() => {
+                        if (!isAnswerSubmitted) {
+                          handleSelectOption(opt);
+                          setTimeout(() => handleSubmitAnswer(), 50);
+                        }
+                      }}
                       disabled={isAnswerSubmitted}
+                      style={{ position: 'relative' }}
                     >
+                      <span
+                        style={{
+                          position: 'absolute',
+                          top: '6px',
+                          left: '10px',
+                          fontSize: '0.68rem',
+                          color: selectedAnswer === opt ? 'rgba(255, 255, 255, 0.7)' : 'var(--text-muted)',
+                          fontWeight: 700,
+                        }}
+                      >
+                        [{i + 1}]
+                      </span>
                       {opt}
                     </button>
                   );
                 })}
               </div>
+
+              {/* Answer Verification Feedback Card */}
+              {isAnswerSubmitted && (
+                <div
+                  style={{
+                    marginBottom: '1.25rem',
+                    padding: '1.25rem',
+                    borderRadius: 'var(--radius-md)',
+                    background: isCorrect ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                    border: `2px solid ${isCorrect ? '#10b981' : '#ef4444'}`,
+                    boxShadow: isCorrect ? '0 0 25px rgba(16, 185, 129, 0.25)' : '0 0 25px rgba(239, 68, 68, 0.25)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.6rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      {isCorrect ? <CheckCircle2 size={24} color="#10b981" /> : <AlertCircle size={24} color="#ef4444" />}
+                      <div>
+                        <strong style={{ fontSize: '1.15rem', color: isCorrect ? '#34d399' : '#f87171' }}>
+                          {isCorrect ? '✅ Brilliant! Correct Answer!' : `❌ Correct Solution: ${currentQuestion.correctAnswer}`}
+                        </strong>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                          {isCorrect ? `You selected "${selectedAnswer}" which is 100% correct!` : `You selected "${selectedAnswer}". Check the steps below:`}
+                        </div>
+                      </div>
+                    </div>
+
+                    <button className="btn btn-primary btn-md" onClick={handleNextRound} style={{ boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)' }}>
+                      {currentRound < questionCount ? 'Next Question' : 'View Results'} <ArrowRight size={16} />
+                    </button>
+                  </div>
+
+                  <p style={{ fontSize: '0.92rem', color: 'var(--text-primary)', marginBottom: '0.6rem', lineHeight: 1.5 }}>
+                    {currentQuestion.explanation}
+                  </p>
+
+                  {currentQuestion.workedSolution && (
+                    <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '0.6rem' }}>
+                      <strong style={{ color: '#38bdf8' }}>Verification Tip:</strong> {currentQuestion.workedSolution.verificationTip}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.25rem', flexWrap: 'wrap', gap: '0.6rem' }}>
@@ -506,8 +635,15 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                     className="btn btn-primary btn-lg"
                     disabled={selectedAnswer === null}
                     onClick={handleSubmitAnswer}
+                    style={{
+                      boxShadow: selectedAnswer !== null ? '0 0 20px rgba(56, 189, 248, 0.4)' : undefined,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
                   >
-                    Submit Answer
+                    <CheckCircle2 size={18} />
+                    {selectedAnswer === null ? 'Select an Option to Check' : `Check Answer: "${selectedAnswer}"`}
                   </button>
                 ) : (
                   <button className="btn btn-primary btn-lg" onClick={handleNextRound}>
@@ -528,34 +664,6 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                       <span>{currentQuestion.hints[idx]}</span>
                     </div>
                   ))}
-                </div>
-              )}
-
-              {/* Worked Solution & Reflection */}
-              {isAnswerSubmitted && (
-                <div
-                  style={{
-                    marginTop: '1.25rem',
-                    padding: '1.25rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: isCorrect ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
-                    border: `1px solid ${isCorrect ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                    {isCorrect ? <CheckCircle2 size={18} color="#10b981" /> : <AlertCircle size={18} color="#ef4444" />}
-                    <strong style={{ color: isCorrect ? '#10b981' : '#ef4444' }}>
-                      {isCorrect ? 'Excellent Mathematical Reasoning!' : `Solution: ${currentQuestion.correctAnswer}`}
-                    </strong>
-                  </div>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '0.6rem' }}>
-                    {currentQuestion.explanation}
-                  </p>
-                  {currentQuestion.workedSolution && (
-                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.5rem' }}>
-                      <strong>Verification:</strong> {currentQuestion.workedSolution.verificationTip}
-                    </div>
-                  )}
                 </div>
               )}
 

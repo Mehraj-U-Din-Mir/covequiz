@@ -198,6 +198,35 @@ class SoundManager {
       // Audio fallback
     }
   }
+
+  public playCount(step: number = 1) {
+    if (this.isMuted) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      // Pentatonic scale tones for happy, musical counting
+      const baseFreq = 392.00; // G4
+      const scale = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24]; // semitones
+      const semitone = scale[(step - 1) % scale.length];
+      const freq = baseFreq * Math.pow(2, semitone / 12);
+
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(this.volume * 0.45, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.18);
+    } catch {
+      // Audio fallback
+    }
+  }
 }
 
 export const soundManager = new SoundManager();
