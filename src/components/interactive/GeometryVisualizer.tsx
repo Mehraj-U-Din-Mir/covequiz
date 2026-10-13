@@ -9,8 +9,8 @@ export const GeometryVisualizer: React.FC<GeometryVisualizerProps> = ({ data }) 
 
   if (data.type === 'right_triangle') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="200" height="150" viewBox="0 0 200 150">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <svg viewBox="0 0 200 150" style={{ width: '100%', maxWidth: '200px', height: 'auto' }}>
           <polygon points="30,120 170,120 30,30" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" strokeWidth="3" />
           {/* Right angle mark */}
           <rect x="30" y="105" width="15" height="15" fill="none" stroke="#38bdf8" strokeWidth="2" />
@@ -26,8 +26,8 @@ export const GeometryVisualizer: React.FC<GeometryVisualizerProps> = ({ data }) 
 
   if (data.type === 'rectangle') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="220" height="120" viewBox="0 0 220 120">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <svg viewBox="0 0 220 120" style={{ width: '100%', maxWidth: '220px', height: 'auto' }}>
           <rect x="25" y="20" width="170" height="80" rx="4" fill="rgba(16, 185, 129, 0.15)" stroke="#10b981" strokeWidth="3" />
           <text x="110" y="15" fill="white" fontSize="13" textAnchor="middle" fontWeight="700">length = {data.length} m</text>
           <text x="110" y="115" fill="white" fontSize="13" textAnchor="middle" fontWeight="700">length = {data.length} m</text>
@@ -45,8 +45,8 @@ export const GeometryVisualizer: React.FC<GeometryVisualizerProps> = ({ data }) 
     const y2 = 100 + 80 * Math.sin(-rad);
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="200" height="130" viewBox="0 0 200 130">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+        <svg viewBox="0 0 200 130" style={{ width: '100%', maxWidth: '200px', height: 'auto' }}>
           {/* Base ray */}
           <line x1="100" y1="100" x2="180" y2="100" stroke="#38bdf8" strokeWidth="3" />
           {/* Angled ray */}

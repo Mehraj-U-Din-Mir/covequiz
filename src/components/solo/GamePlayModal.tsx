@@ -227,7 +227,7 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
       <div
         className="modal-content"
         style={{
-          maxWidth: isConfiguring ? '620px' : '820px',
+          maxWidth: isConfiguring ? 'min(620px, 98vw)' : 'min(820px, 98vw)',
           width: '100%',
           overflowX: 'hidden',
           boxSizing: 'border-box',
@@ -431,14 +431,14 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
               {/* Challenge Prompt */}
               <div
                 style={{
-                  padding: '1.25rem 1.5rem',
+                  padding: 'clamp(0.85rem, 2.5vw, 1.25rem) clamp(1rem, 3vw, 1.5rem)',
                   borderRadius: 'var(--radius-md)',
                   background: 'rgba(255, 255, 255, 0.04)',
                   border: '1px solid var(--border-subtle)',
                   marginBottom: '1.25rem',
                 }}
               >
-                <h3 style={{ fontSize: '1.3rem', color: 'white', fontWeight: 800, textAlign: 'center' }}>
+                <h3 style={{ fontSize: 'clamp(1.05rem, 3.6vw, 1.3rem)', color: 'white', fontWeight: 800, textAlign: 'center', lineHeight: 1.4 }}>
                   {currentQuestion.prompt}
                 </h3>
               </div>
@@ -603,8 +603,8 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
               )}
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.25rem', flexWrap: 'wrap', gap: '0.6rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div className="modal-action-bar">
+                <div className="modal-action-bar-secondary">
                   <button
                     className="btn btn-secondary btn-sm"
                     onClick={handleUnlockHint}
@@ -630,26 +630,40 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                   )}
                 </div>
 
-                {!isAnswerSubmitted ? (
-                  <button
-                    className="btn btn-primary btn-lg"
-                    disabled={selectedAnswer === null}
-                    onClick={handleSubmitAnswer}
-                    style={{
-                      boxShadow: selectedAnswer !== null ? '0 0 20px rgba(56, 189, 248, 0.4)' : undefined,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                    }}
-                  >
-                    <CheckCircle2 size={18} />
-                    {selectedAnswer === null ? 'Select an Option to Check' : `Check Answer: "${selectedAnswer}"`}
-                  </button>
-                ) : (
-                  <button className="btn btn-primary btn-lg" onClick={handleNextRound}>
-                    {currentRound < questionCount ? 'Next Question' : 'Complete Quest'} <ArrowRight size={18} />
-                  </button>
-                )}
+                <div className="modal-action-bar-primary">
+                  {!isAnswerSubmitted ? (
+                    <button
+                      className="btn btn-primary btn-lg"
+                      disabled={selectedAnswer === null}
+                      onClick={handleSubmitAnswer}
+                      style={{
+                        boxShadow: selectedAnswer !== null ? '0 0 20px rgba(56, 189, 248, 0.4)' : undefined,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        width: '100%',
+                      }}
+                    >
+                      <CheckCircle2 size={18} />
+                      {selectedAnswer === null ? 'Select an Option' : `Check Answer: "${selectedAnswer}"`}
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-primary btn-lg"
+                      onClick={handleNextRound}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        width: '100%',
+                      }}
+                    >
+                      {currentRound < questionCount ? 'Next Question' : 'Complete Quest'} <ArrowRight size={18} />
+                    </button>
+                  )}
+                </div>
               </div>
 
               {/* 3-Tier Mathematical Hints Drawer */}
@@ -722,7 +736,7 @@ export const GamePlayModal: React.FC<GamePlayModalProps> = ({ game, onClose, onO
                 </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap' }}>
                 <button className="btn btn-secondary" onClick={handleReplay}>
                   <RotateCcw size={16} /> Choose Count & Play Again
                 </button>

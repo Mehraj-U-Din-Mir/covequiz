@@ -63,16 +63,16 @@ export const StageSelectorModal: React.FC<StageSelectorModalProps> = ({
         {/* Modal Body */}
         <div className="modal-body">
           {/* Category Tabs: Easy (1-10), Intermediate (11-20), Advanced (21-30) */}
-          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.45rem', marginBottom: '1.1rem', flexWrap: 'wrap' }}>
             <button
               className={`btn ${selectedCategory === 'easy' ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => {
                 soundManager.playClick();
                 setSelectedCategory('easy');
               }}
-              style={{ flex: 1 }}
+              style={{ flex: '1 1 100px', minWidth: '95px', fontSize: '0.82rem', padding: '0.5rem 0.6rem', textAlign: 'center' }}
             >
-              Easy (Stages 1–10)
+              Easy (1–10)
             </button>
             <button
               className={`btn ${selectedCategory === 'intermediate' ? 'btn-primary' : 'btn-secondary'}`}
@@ -80,9 +80,9 @@ export const StageSelectorModal: React.FC<StageSelectorModalProps> = ({
                 soundManager.playClick();
                 setSelectedCategory('intermediate');
               }}
-              style={{ flex: 1 }}
+              style={{ flex: '1 1 120px', minWidth: '105px', fontSize: '0.82rem', padding: '0.5rem 0.6rem', textAlign: 'center' }}
             >
-              Intermediate (Stages 11–20)
+              Intermediate (11–20)
             </button>
             <button
               className={`btn ${selectedCategory === 'advanced' ? 'btn-primary' : 'btn-secondary'}`}
@@ -90,14 +90,14 @@ export const StageSelectorModal: React.FC<StageSelectorModalProps> = ({
                 soundManager.playClick();
                 setSelectedCategory('advanced');
               }}
-              style={{ flex: 1 }}
+              style={{ flex: '1 1 110px', minWidth: '100px', fontSize: '0.82rem', padding: '0.5rem 0.6rem', textAlign: 'center' }}
             >
-              Advanced (Stages 21–30)
+              Advanced (21–30)
             </button>
           </div>
 
           {/* 10 Stage Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.8rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.3rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.65rem', maxHeight: '420px', overflowY: 'auto', paddingRight: '0.2rem' }}>
             {filteredStages.map((stg) => (
               <div
                 key={stg.stageNumber}

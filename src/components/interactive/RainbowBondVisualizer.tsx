@@ -23,7 +23,7 @@ export const RainbowBondVisualizer: React.FC<RainbowBondVisualizerProps> = ({ gi
         Rainbow Number Bond Bridge to <strong style={{ color: '#38bdf8' }}>{target}</strong>
       </div>
 
-      <svg width="280" height="120" viewBox="0 0 280 120">
+      <svg viewBox="0 0 280 120" style={{ width: '100%', maxWidth: '280px', height: 'auto', display: 'block' }}>
         <defs>
           <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#ec4899" />

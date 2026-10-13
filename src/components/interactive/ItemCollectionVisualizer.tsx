@@ -104,72 +104,63 @@ export const ItemCollectionVisualizer: React.FC<ItemCollectionVisualizerProps> =
       }}
     >
       {/* Top Interactive Safari Control Bar */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0.65rem 1rem',
-          background: 'rgba(0, 0, 0, 0.4)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="safari-control-bar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
           <span style={{ fontSize: '1.1rem' }}>{item}</span>
-          <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#f59e0b' }}>
-            Savanna Watering Hole Scout
+          <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#f59e0b', whiteSpace: 'nowrap' }}>
+            Savanna Safari Scout
           </span>
           <span
+            className="safari-helper-badge"
             style={{
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               color: 'var(--text-muted)',
               background: 'rgba(255, 255, 255, 0.08)',
-              padding: '0.2rem 0.5rem',
+              padding: '0.15rem 0.45rem',
               borderRadius: '12px',
+              whiteSpace: 'nowrap',
             }}
           >
-            Touch or click animals to count
+            Touch animals to count
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
           {/* View Toggle */}
           <button
             className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.75rem', padding: '0.25rem 0.55rem' }}
+            style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
             onClick={() => setViewMode((m) => (m === 'safari' ? 'organized' : 'safari'))}
             title="Toggle between natural habitat and organized grid"
           >
-            {viewMode === 'safari' ? <Grid size={13} /> : <Eye size={13} />}
-            {viewMode === 'safari' ? 'Organize Rows' : 'Safari Habitat'}
+            {viewMode === 'safari' ? <Grid size={12} /> : <Eye size={12} />}
+            <span>{viewMode === 'safari' ? 'Organize' : 'Safari'}</span>
           </button>
 
           {/* Pair Highlight Toggle */}
           <button
             className="btn btn-secondary btn-sm"
             style={{
-              fontSize: '0.75rem',
-              padding: '0.25rem 0.55rem',
+              fontSize: '0.72rem',
+              padding: '0.25rem 0.5rem',
               borderColor: highlightPairs ? '#38bdf8' : undefined,
               color: highlightPairs ? '#38bdf8' : undefined,
             }}
             onClick={() => setHighlightPairs((p) => !p)}
             title="Group animals in pairs of 2"
           >
-            Pairs (2s)
+            Pairs
           </button>
 
           {/* Reset button */}
           {currentCount > 0 && !isAnswerSubmitted && (
             <button
               className="btn btn-secondary btn-sm"
-              style={{ fontSize: '0.75rem', padding: '0.25rem 0.55rem' }}
+              style={{ fontSize: '0.72rem', padding: '0.25rem 0.5rem' }}
               onClick={handleResetCount}
               title="Reset counting marks"
             >
-              <RotateCcw size={13} /> Recount
+              <RotateCcw size={12} /> Reset
             </button>
           )}
         </div>
@@ -178,10 +169,11 @@ export const ItemCollectionVisualizer: React.FC<ItemCollectionVisualizerProps> =
       {/* Main Safari Stage / Watering Hole Landscape */}
       {viewMode === 'safari' ? (
         <div
+          className="safari-stage-arena"
           style={{
             position: 'relative',
             width: '100%',
-            height: '240px',
+            height: 'clamp(175px, 28vh, 230px)',
             background: 'radial-gradient(ellipse at 50% 65%, #0284c7 0%, #0369a1 28%, #1e3a5f 46%, #3b1d0c 70%, #1c1917 100%)',
             overflow: 'hidden',
             userSelect: 'none',
@@ -221,8 +213,8 @@ export const ItemCollectionVisualizer: React.FC<ItemCollectionVisualizerProps> =
               left: '50%',
               top: '56%',
               transform: 'translate(-50%, -50%)',
-              width: '260px',
-              height: '110px',
+              width: 'min(260px, 72%)',
+              height: 'min(110px, 46%)',
               borderRadius: '50%',
               background: 'radial-gradient(ellipse at center, rgba(56, 189, 248, 0.45) 0%, rgba(14, 165, 233, 0.3) 50%, rgba(2, 132, 199, 0.15) 100%)',
               border: '2px solid rgba(56, 189, 248, 0.5)',
@@ -360,7 +352,7 @@ export const ItemCollectionVisualizer: React.FC<ItemCollectionVisualizerProps> =
                 {/* Animal Sprite with Interactive Highlight Ring */}
                 <div
                   style={{
-                    fontSize: '2.5rem',
+                    fontSize: 'clamp(1.7rem, 5.5vw, 2.5rem)',
                     lineHeight: 1,
                     position: 'relative',
                     zIndex: 5,
@@ -461,18 +453,7 @@ export const ItemCollectionVisualizer: React.FC<ItemCollectionVisualizerProps> =
       )}
 
       {/* Bottom Counter Bar & Answer Connector */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0.75rem 1.1rem',
-          background: 'rgba(0, 0, 0, 0.55)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-          flexWrap: 'wrap',
-          gap: '0.6rem',
-        }}
-      >
+      <div className="safari-counter-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             Your Finger Count:

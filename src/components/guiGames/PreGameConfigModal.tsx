@@ -101,14 +101,12 @@ export const PreGameConfigModal: React.FC<PreGameConfigModalProps> = ({
               </div>
               <h3
                 style={{
-                  fontSize: '1.3rem',
+                  fontSize: 'clamp(1.1rem, 3.5vw, 1.3rem)',
                   fontWeight: 800,
                   marginTop: '0.2rem',
                   letterSpacing: '-0.02em',
                   color: '#ffffff',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  lineHeight: 1.25,
                 }}
               >
                 {game.title}

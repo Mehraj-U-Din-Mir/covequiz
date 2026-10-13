@@ -26,7 +26,7 @@ export const BaseTenBlocksVisualizer: React.FC<BaseTenBlocksVisualizerProps> = (
       <div
         style={{
           display: 'flex',
-          gap: '2rem',
+          gap: 'clamp(0.75rem, 3.5vw, 2rem)',
           alignItems: 'flex-end',
           justifyContent: 'center',
           flexWrap: 'wrap',
@@ -34,14 +34,14 @@ export const BaseTenBlocksVisualizer: React.FC<BaseTenBlocksVisualizerProps> = (
       >
         {/* Tens Rods Section */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 'clamp(4px, 1.5vw, 8px)', alignItems: 'flex-end' }}>
             {Array.from({ length: tens }).map((_, tIdx) => (
               <div
                 key={tIdx}
                 title="1 Ten Rod = 10 units"
                 style={{
-                  width: '18px',
-                  height: '110px',
+                  width: 'clamp(13px, 3.2vw, 18px)',
+                  height: 'clamp(80px, 18vw, 110px)',
                   background: 'linear-gradient(180deg, #38bdf8 0%, #0284c7 100%)',
                   borderRadius: '3px',
                   border: '1.5px solid #7dd3fc',
@@ -80,7 +80,7 @@ export const BaseTenBlocksVisualizer: React.FC<BaseTenBlocksVisualizerProps> = (
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '6px',
+              gap: 'clamp(4px, 1.5vw, 6px)',
               maxWidth: '120px',
             }}
           >
@@ -89,8 +89,8 @@ export const BaseTenBlocksVisualizer: React.FC<BaseTenBlocksVisualizerProps> = (
                 key={oIdx}
                 title="1 One Unit = 1"
                 style={{
-                  width: '16px',
-                  height: '16px',
+                  width: 'clamp(12px, 3vw, 16px)',
+                  height: 'clamp(12px, 3vw, 16px)',
                   background: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
                   borderRadius: '2px',
                   border: '1.5px solid #fde68a',

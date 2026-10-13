@@ -16,18 +16,21 @@ export const NumberLineGame: React.FC<NumberLineGameProps> = ({
 }) => {
   const [min, max] = range;
   const count = max - min;
+  const step = count <= 20 ? 1 : count <= 50 ? 5 : 10;
   const ticks = Array.from({ length: count + 1 }, (_, i) => min + i);
 
   return (
-    <div className="number-line-container">
-      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-        Interactive Number Line (Click a number mark to place your answer)
+    <div className="number-line-container" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', padding: '0.5rem 0.2rem' }}>
+      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem', textAlign: 'center' }}>
+        Interactive Number Line (Tap a mark to select position)
       </div>
 
-      <div className="number-line-axis" style={{ width: '92%' }}>
+      <div className="number-line-axis" style={{ width: '92%', margin: '20px auto 30px auto' }}>
         {ticks.map((val) => {
           const pct = ((val - min) / count) * 100;
           const isStart = val === start;
+          const isMajor = val % 5 === 0;
+          const shouldShowLabel = count <= 15 || val === start || val === min || val === max || (count <= 30 && val % 2 === 0) || (val % step === 0);
 
           return (
             <div
@@ -38,37 +41,40 @@ export const NumberLineGame: React.FC<NumberLineGameProps> = ({
                 left: `${pct}%`,
                 top: '-20px',
                 bottom: '-25px',
-                width: '28px',
+                width: '26px',
                 transform: 'translateX(-50%)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                zIndex: 5,
+                zIndex: isStart ? 10 : 5,
               }}
             >
               {/* Tick line */}
               <div
                 style={{
-                  width: val % 5 === 0 ? '3px' : '1px',
-                  height: val % 5 === 0 ? '22px' : '14px',
-                  background: isStart ? '#38bdf8' : val % 5 === 0 ? '#cbd5e1' : '#64748b',
+                  width: isMajor ? '2px' : '1px',
+                  height: isMajor ? '20px' : '12px',
+                  background: isStart ? '#38bdf8' : isMajor ? '#cbd5e1' : '#64748b',
                   marginTop: '12px',
                 }}
               />
 
               {/* Number Label */}
-              <div
-                style={{
-                  fontSize: val % 5 === 0 ? '0.85rem' : '0.72rem',
-                  fontWeight: val % 5 === 0 || isStart ? 800 : 500,
-                  color: isStart ? '#38bdf8' : 'var(--text-secondary)',
-                  marginTop: '6px',
-                  userSelect: 'none',
-                }}
-              >
-                {val}
-              </div>
+              {shouldShowLabel && (
+                <div
+                  style={{
+                    fontSize: isMajor || isStart ? '0.78rem' : '0.68rem',
+                    fontWeight: isMajor || isStart ? 800 : 500,
+                    color: isStart ? '#38bdf8' : 'var(--text-secondary)',
+                    marginTop: '4px',
+                    userSelect: 'none',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {val}
+                </div>
+              )}
 
               {/* Character marker if at start */}
               {isStart && (

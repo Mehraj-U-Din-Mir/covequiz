@@ -90,6 +90,12 @@ body.projector-mode {
 }
 
 /* Base resets */
+html {
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -107,6 +113,8 @@ body {
   font-family: var(--font-body);
   line-height: 1.5;
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -948,6 +956,60 @@ body.light-theme .nav-tab-pill:hover {
   color: white;
 }
 
+/* Responsive Action Bar for Modals */
+.modal-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.modal-action-bar-secondary {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.modal-action-bar-primary {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+/* Responsive Safari Animal Visualizer */
+.safari-control-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+
+.safari-counter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+
+.safari-helper-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: clamp(0.72rem, 2.5vw, 0.82rem);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
 /* Mathematical Visual Canvas */
 .math-canvas {
   background: rgba(10, 14, 26, 0.6);
@@ -1130,17 +1192,45 @@ body.light-theme .nav-tab-pill:hover {
 
 @media (max-width: 768px) {
   .options-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem;
+    margin: 1rem 0;
+  }
+  .option-tile {
+    padding: 0.85rem 0.6rem;
+    font-size: clamp(1rem, 3.8vw, 1.15rem);
+    min-height: 48px;
+    border-radius: var(--radius-sm);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   .main-content {
-    padding: 1rem 0.75rem;
+    padding: 0.85rem 0.5rem;
   }
   .games-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr));
+    gap: 0.9rem;
+  }
+  .level-selector-strip {
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.6rem;
+  }
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  .modal-content {
+    max-height: 94dvh;
+    border-radius: var(--radius-md);
+  }
+  .modal-header {
+    padding: 0.85rem 1rem;
+  }
+  .modal-body {
+    padding: 1rem 0.85rem;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .nav-stat-chip.nav-stat-purple,
   .nav-stat-chip.nav-stat-amber {
     display: none;
@@ -1152,6 +1242,97 @@ body.light-theme .nav-tab-pill:hover {
     width: 32px;
     height: 32px;
     font-size: 1rem;
+  }
+  .modal-overlay {
+    padding: 0.35rem;
+  }
+  .modal-content {
+    max-height: 96dvh;
+    border-radius: var(--radius-md);
+  }
+  .modal-header {
+    padding: 0.75rem 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .modal-body {
+    padding: 0.85rem 0.65rem;
+  }
+  .modal-action-bar {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+  .modal-action-bar-primary {
+    width: 100%;
+  }
+  .modal-action-bar-primary .btn {
+    width: 100% !important;
+    min-height: 48px;
+    font-size: 1.05rem !important;
+    justify-content: center;
+  }
+  .modal-action-bar-secondary {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.45rem;
+  }
+  .modal-action-bar-secondary .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 42px;
+  }
+  .safari-control-bar,
+  .safari-counter-bar {
+    gap: 0.45rem;
+  }
+  .footer-attribution-card {
+    padding: 0.65rem 1rem;
+  }
+  .footer-attribution-text {
+    font-size: 0.92rem;
+  }
+  .footer-author-name {
+    font-size: 1rem;
+  }
+  .footer-hod-tag {
+    font-size: 0.82rem;
+    padding: 0.1rem 0.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safari-control-bar,
+  .safari-counter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .safari-helper-badge {
+    justify-content: center;
+    width: 100%;
+  }
+  .options-grid {
+    gap: 0.45rem;
+    margin: 0.75rem 0;
+  }
+  .option-tile {
+    font-size: 0.98rem;
+    padding: 0.75rem 0.45rem;
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 360px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+  .option-tile {
+    min-height: 44px;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.92rem;
   }
 }
 
@@ -1421,16 +1602,48 @@ body.light-theme .nav-tab-pill:hover {
 
 @media (max-width: 1024px) {
   .horizontal-war-modal {
-    max-height: 96vh !important;
+    max-height: 96dvh !important;
     height: auto !important;
+    width: 98vw !important;
   }
   .battlefield-grid-horizontal {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.85rem;
     overflow-y: auto;
   }
   .center-war-stage {
     order: -1;
+    max-height: 250px;
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .horizontal-war-modal {
+    max-height: 98dvh !important;
+    height: 98dvh !important;
+    width: 99vw !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  .center-war-stage {
+    max-height: 200px;
+    padding: 0.65rem;
+  }
+  .war-options-grid {
+    gap: 0.45rem;
+    margin-bottom: 0.5rem;
+  }
+  .war-option-tile {
+    min-height: 46px;
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    padding: 0.55rem 0.35rem;
+  }
+  .player-battle-console {
+    padding: 0.75rem;
+  }
+  .war-frontline-container {
+    padding: 0.45rem 0.75rem;
+    margin-bottom: 0.6rem;
   }
 }
 
